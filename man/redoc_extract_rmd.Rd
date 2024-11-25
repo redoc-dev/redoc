@@ -4,8 +4,13 @@
 \alias{redoc_extract_rmd}
 \title{Extract the Rmd used to to produce a Reversible Word Doc}
 \usage{
-redoc_extract_rmd(docx, type = c("original", "roundtrip"), dir = ".",
-  to = NULL, overwrite = FALSE)
+redoc_extract_rmd(
+  docx,
+  type = c("original", "roundtrip"),
+  dir = ".",
+  to = NULL,
+  overwrite = FALSE
+)
 }
 \arguments{
 \item{docx}{A path to a word file or a an \code{rdocx} object created with

@@ -4,11 +4,18 @@
 \alias{redoc}
 \title{R Markdown format for Reversible Reproducible Word Documents}
 \usage{
-redoc(highlight_outputs = FALSE, wrap = getOption("redoc.wrap", 80),
-  margins = NULL, line_numbers = NULL, comment_author = NULL,
-  keep_md = FALSE, wrappers = list(htmlcommentwrap, latexwrap,
-  rawblockwrap, rawspanwrap, cmwrap, citationwrap), diagnostics = TRUE,
-  ...)
+redoc(
+  highlight_outputs = FALSE,
+  wrap = getOption("redoc.wrap", 80),
+  margins = NULL,
+  line_numbers = NULL,
+  comment_author = NULL,
+  keep_md = FALSE,
+  wrappers = list(htmlcommentwrap, latexwrap, rawblockwrap, rawspanwrap, cmwrap,
+    citationwrap),
+  diagnostics = TRUE,
+  ...
+)
 }
 \arguments{
 \item{highlight_outputs}{whether to highlight outputs from chunks and inline

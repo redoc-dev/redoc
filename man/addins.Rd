@@ -27,7 +27,7 @@ knits the current file using \code{\link[=redoc]{redoc()}} replaces the text wit
 been round-tripped to Word and back. This helps eliminate small formatting
 differences.
 
-The \code{dedoc_*} functions de-render Word documents (using \code{\link[=dedoc]{dedoc()}}),
+The \verb{dedoc_*} functions de-render Word documents (using \code{\link[=dedoc]{dedoc()}}),
 and place the results in the current or new file.  By default, they will
 also display a diff (generated via \code{\link[=redoc_diff]{redoc_diff()}}) of edits in the word file
 compared to its original version a compilation time. If called without

@@ -4,11 +4,20 @@
 \alias{redoc_diff}
 \title{Compare changes in an edited redoc Word Document against the original}
 \usage{
-redoc_diff(docx, target = "original", current = "current",
-  track_changes = "comments_only", block_missing = "comment",
-  inline_missing = "omit", wrap = getOption("redoc.wrap", 80),
-  mode = "sidebyside", context = "auto", tar.banner = NULL,
-  cur.banner = NULL, ...)
+redoc_diff(
+  docx,
+  target = "original",
+  current = "current",
+  track_changes = "comments_only",
+  block_missing = "comment",
+  inline_missing = "omit",
+  wrap = getOption("redoc.wrap", 80),
+  mode = "sidebyside",
+  context = "auto",
+  tar.banner = NULL,
+  cur.banner = NULL,
+  ...
+)
 }
 \arguments{
 \item{docx}{Path to an MS Word \code{.docx} file originally generated with

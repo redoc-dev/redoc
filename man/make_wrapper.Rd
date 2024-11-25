@@ -19,7 +19,7 @@ will throw an error otherwise.}
 
 \item{regex}{A regular expression that identifies the text to be wrapped and
 restored, including all delimiters.  It will search in a single string with
-line breaks.  \link[stringi:stringi-search-regex]{ICU regular expressions} are used.
+line breaks.  \link[stringi:about_search_regex]{ICU regular expressions} are used.
 The \code{(?s)} flag is recommended for multi-line expressions.}
 
 \item{type}{whether the text should be treated as inline or block text. Inlines
@@ -30,7 +30,7 @@ treated differently in several ways, especially when restoring text in \code{\li
 A function of class \code{redoc_wrapper}
 }
 \description{
-Wrapper functions are passed to the \code{wrapper=} argument of
+Wrapper functions are passed to the \verb{wrapper=} argument of
 \code{\link[=redoc]{redoc()}} to specify what text in R Markdown files should be
 captured and restored when de-rendering (in addition to code chunks, inline
 code, and YAML blocks).  \code{make_wrapper()} simplifies creation of these
@@ -69,7 +69,7 @@ htmlcommentwrap <- make_wrapper(
 
 latexwrap <- make_wrapper(
     label = "latex",
-    regex = "(?<=[\\n\\r])\\\\\\\\\\\\w+.*?(?=[\\n\\r])",
+    regex = "(?<=[\n\r])\\\\\\\\\\\\w+.*?(?=[\n\r])",
     type = "block")
 
 rawblockwrap <- make_wrapper(

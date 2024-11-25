@@ -4,10 +4,19 @@
 \alias{dedoc}
 \title{Convert an Reversible Document back to R Markdown}
 \usage{
-dedoc(docx, to = NULL, dir = ".", track_changes = "comments_only",
-  block_missing = "comment", inline_missing = "omit",
-  wrap = getOption("redoc.wrap", 80), overwrite = FALSE,
-  orig_docx = NULL, orig_codefile = NULL, verbose = FALSE)
+dedoc(
+  docx,
+  to = NULL,
+  dir = ".",
+  track_changes = "comments_only",
+  block_missing = "comment",
+  inline_missing = "omit",
+  wrap = getOption("redoc.wrap", 80),
+  overwrite = FALSE,
+  orig_docx = NULL,
+  orig_codefile = NULL,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{docx}{The `.docx`` file to convert}
@@ -24,7 +33,7 @@ them. The default, \code{"criticmarkup"}, converts the tracked changes to
 \href{http://criticmarkup.com/spec.php#thebasicsyntax}{Critic Markup syntax}.
 "comments_only" will only convert comments, as other changes can be
 viewed with \code{\link[=redoc_diff]{redoc_diff()}}.
-\code{"all"} marks up tracked changes and comments in \code{<span>} tags and is
+\code{"all"} marks up tracked changes and comments in \verb{<span>} tags and is
 useful for debugging.  See the
 \href{http://pandoc.org/MANUAL.html#option--track-changes}{pandoc manual} for
 details.}

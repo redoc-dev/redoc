@@ -24,7 +24,7 @@ criticmarkup_to_pandoc <- function(md, author = NULL) {
     author <- fullname(fallback = username(fallback = "R User"))
   }
 
-  timestamp <- as.character(Sys.time(), format = "%Y-%m-%dT%H:%M:%SZ")
+  timestamp <- format(Sys.time(), format = "%Y-%m-%dT%H:%M:%SZ")
 
   captures <- c(
     insertion = "(?s)\\{\\+\\+(.*?)\\+\\+\\}",
