@@ -50,7 +50,7 @@ redoc <- function(highlight_outputs = FALSE, wrap = getOption("redoc.wrap", 80),
     from = rmarkdown::from_rmarkdown(extensions = md_extensions),
     args = c(
       "--lua-filter",
-      system.file("lua-filters", "protect-empty.lua",
+      system.file("lua-filters", "content-controls.lua",
         package = "redoc"
       ),
       "--eol=lf"

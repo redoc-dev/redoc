@@ -29,7 +29,7 @@ roundtrip_active_file <- function() {
   rstudioapi::documentSave(active_file$id)
   docfile <- rmarkdown::render(
     normalizePath(active_file$path),
-    output_format = redoc(roundtrip = TRUE),
+    output_format = redoc(),
     quiet = TRUE,
     clean = TRUE
   )
@@ -37,7 +37,7 @@ roundtrip_active_file <- function() {
     type = "roundtrip", dir = tempdir(),
     overwrite = TRUE
   )
-  rstudioapi::setDocumentContents(readfile(rfile), active_file$id)
+  rstudioapi::setDocumentContents(brio::read_file(rfile), active_file$id)
   rstudioapi::setCursorPosition(cursor_position, active_file$id)
 }
 
@@ -57,7 +57,7 @@ dedoc_to_active_file <- function(docx = NULL, showdiff = TRUE) {
     )
   }
   tmprmd <- dedoc(docx, dir = tempdir(), overwrite = TRUE)
-  rstudioapi::setDocumentContents(readfile(tmprmd), active_file$id)
+  rstudioapi::setDocumentContents(brio::read_file(tmprmd), active_file$id)
   rstudioapi::setCursorPosition(cursor_position, active_file$id)
   if (showdiff) {
     print(
@@ -79,7 +79,7 @@ dedoc_to_new_file <- function(docx = NULL, showdiff = TRUE) {
     )
   }
   tmprmd <- dedoc(docx, dir = tempdir(), overwrite = TRUE)
-  rstudioapi::documentNew(readfile(tmprmd), type = "rmarkdown")
+  rstudioapi::documentNew(brio::read_file(tmprmd), type = "rmarkdown")
   if (showdiff) {
     print(
       redoc_diff(docx)

@@ -13,9 +13,9 @@
 #'   directory
 #' @param track_changes How to deal with tracked changes and comments in the
 #'   `.docx` file. `"accept"` accepts all changes, and `"reject"` rejects all of
-#'   them. The default, `"criticmarkup"`, converts the tracked changes to
+#'   them. `"criticmarkup"` converts the tracked changes to
 #'   [Critic Markup syntax](http://criticmarkup.com/spec.php#thebasicsyntax).
-#'   "comments_only" will only convert comments, as other changes can be
+#'   The default, `"comments_only"` will only convert comments, as other changes can be
 #'   viewed with [redoc_diff()].
 #'   `"all"` marks up tracked changes and comments in `<span>` tags and is
 #'   useful for debugging.  See the
@@ -41,7 +41,7 @@
 #' @importFrom  tools file_path_sans_ext
 #' @export
 dedoc <- function(docx, to = NULL, dir = ".",
-                  track_changes = "comments_only",
+                  track_changes = "all",
                   block_missing = "comment",
                   inline_missing = "omit",
                   wrap = getOption("redoc.wrap", 80), overwrite = FALSE,
@@ -67,6 +67,8 @@ Returning markdown only. Alternate data may be provided via `orig_codefile or `o
   to <- file.path(dir, to)
   if (!overwrite && file.exists(to)) stop(to, " exists and overwrite = FALSE")
 
+  docx <- preprocess_docx(docx)
+
   if (!is.null(orig_codefile)) {
     codelist <- read_yaml(orig_codefile)
   } else if (!is.null(orig_docx)) {
@@ -90,7 +92,7 @@ Returning markdown only. Alternate data may be provided via `orig_codefile or `o
     md <- remove_extra_newlines(md)
   }
 
-  cat(md, file = to, sep = "")
+  brio::write_lines(paste(md, collapse = ""), path = to)
   return(to)
 }
 
@@ -269,7 +271,7 @@ merge_yaml_headers <- function(md, codelist) {
 
 
 convert_docx_to_md <- function(docx,
-                               track_changes,
+                               track_changes = "all",
                                wrap = getOption("redoc.wrap", 80),
                                verbose, md_only) {
   docx <- normalizePath(docx)
@@ -305,7 +307,7 @@ convert_docx_to_md <- function(docx,
       "--lua-filter=",
       system.file("lua-filters", "revchunks.lua", package = "redoc")
     ))
-    from_format <- "docx+styles+empty_paragraphs"
+    from_format <- "docx+empty_paragraphs"
   } else {
     filter_opts <- character(0)
     from_format <- "docx"
@@ -320,5 +322,72 @@ convert_docx_to_md <- function(docx,
     options = opts,
     verbose = verbose
   )
-  return(readfile(md_tmp))
+  return(brio::read_file(md_tmp))
 }
+
+
+#' Make modifications to docx xml before converting to markdown
+#' Unzips to a temporary directory, modifies the XML, then re-zips
+#' to a temporary file and returns its path
+#' Maybe this should be refactored to use officer::read_docx and work
+#' like other functions in officer, e.g., body_sdt_to_ins()
+#' @noRd
+preprocess_docx <- function(docx, outfile = tempfile(fileext = ".docx")) {
+  docx <- to_docx(docx)
+  docx <- body_contentcontrols_to_insertions(docx)
+  print(docx, outfile)
+  outfile
+}
+
+#' @import officer xml2
+body_contentcontrols_to_insertions <-
+  function(x, sdt_tag_starts_with = "redoc-") {
+    x <- to_docx(x)
+    doc_xml <- x$doc_obj$get()
+    sdt_nodes <- xml_find_all(doc_xml,
+      paste0(".//w:sdt[w:sdtPr/w:tag[starts-with(@w:val, '",
+             sdt_tag_starts_with,"')]]"))
+
+    for (node in sdt_nodes) {
+      sdt_tag <- xml_find_first(node, ".//w:tag") |> xml_attr("val")
+      sdt_alias <- xml_find_first(node, ".//w:alias") |> xml_attr("val")
+      sdt_lock <- xml_find_first(node, ".//w:lock") |> xml_attr("val")
+      sdt_content <- xml_find_first(node, ".//w:sdtContent")
+      ins_author <- paste0("redoc_", sdt_tag, "_", sdt_alias, "_", sdt_lock)
+
+      # Add a <w:ins> element to the properties of any paragraph under <:w:sdtContent>
+      # pgraphs <- xml_find_all(sdt_content, ".//w:p")
+      # for (pgraph in pgraphs) {
+      #   ppr <- xml_find_first(pgraph, ".//w:pPr")
+      #   rpr <- xml_find_first(ppr, ".//w:rPr")
+      #   # If the paragraph does not have elements <w:pPr><w:rPr> below it, add them
+      #   if (length(ppr) == 0) {
+      #     ppr <- xml_add_child(pgraph, "w:pPr")
+      #     rpr <- xml_add_child(ppr, "w:rPr")
+      #   } else if (length(rpr) == 0) {
+      #     rpr <- xml_add_child(ppr, "w:rPr")
+      #   }
+      #   # Add a <w:ins> element to the paragraph's <w:rPr> element
+      #   xml_add_child(rpr, "w:ins", `w:id`=paste(sample.int(10, 10, replace = TRUE) - 1, collapse=""),
+      #               `w:author` = ins_author, `w:date` = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ"), .where = 0)
+      # }
+      # Wrap all runs (`<w:r>`) elements below <w:sdtContent> with a <w:ins> element
+      runs <- xml_find_all(sdt_content, ".//w:r")
+      for (run in runs) {
+        ins <- xml_replace(run, "w:ins", `w:id`=paste(sample.int(10, 10, replace = TRUE) - 1, collapse=""),
+                           `w:author` = ins_author, `w:date` = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ"))
+        xml_add_child(ins, run)
+      }
+      newp <- xml_add_child(sdt_content, "w:p", .where = 0)
+      newins <- xml_add_child(newp, "w:ins", `w:id`=paste(sample.int(10, 10, replace = TRUE) - 1, collapse=""),
+                              `w:author` = ins_author, `w:date` = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ"), .where = 0)
+      newr <- xml_add_child(newins, "w:r", .where = 0)
+      xml_add_child(newr, "w:t", "This is a test", .where = 0)
+      # Remove the <w:sdt> element, replacing it with the contents of <w:sdtContent>
+    #  for (content in sdt_content) {
+    #    xml_add_sibling(node, content)
+    #  }
+    #  xml_remove(node)
+    }
+    x
+  }

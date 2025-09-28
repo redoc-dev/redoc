@@ -4,11 +4,18 @@
 -- placeholders like <<<redoc-inline-1>>, to be replaced with chunk content
 -- later
 
+local redoc_insertions = {}
+
 function Div(elem)
-  if elem.attributes["custom-style"] and string.find(elem.attributes["custom-style"], "redoc%-") then
-    return pandoc.Para(pandoc.RawInline(FORMAT, "<<<"..elem.attributes["custom-style"]..">>>"))
-  elseif elem.attributes["custom-style"] then
-     return elem.content
+  -- Create a table to store the names of all the redoc insertions found
+  if (elem.classes[1] == "paragraph-insertion" or elem.classes[1] == "insertion") and string.find(elem.attributes["author"], "redoc_") then
+    local _, _, id = string.find(elem.attributes["author"], "^redoc_([^_]+)_[^_]+_[^_]+$")
+    if not redoc_insertions[id] then
+      redoc_insertions[id] = true
+      return pandoc.Para(pandoc.RawInline(FORMAT, "<<<" .. id ..">>>"))
+    else
+      return {}
+    end
   else
     return nil
   end
@@ -17,10 +24,14 @@ end
 function Span(elem)
   if elem.classes[1] and elem.classes[1] == "anchor" then
     return {}
-  elseif elem.attributes["custom-style"] and string.find(elem.attributes["custom-style"], "redoc%-") then
-    return pandoc.RawInline(FORMAT, "<<<"..elem.attributes["custom-style"]..">>>")
-  elseif elem.attributes["custom-style"] then
-    return elem.content
+  elseif (elem.classes[1] == "paragraph-insertion" or elem.classes[1] == "insertion") and string.find(elem.attributes["author"], "redoc_") then
+    local _, _, id = string.find(elem.attributes["author"], "^redoc_([^_]+)_[^_]+_[^_]+$")
+    if not redoc_insertions[id] then
+      redoc_insertions[id] = true
+    return pandoc.RawInline(FORMAT, "<<<" .. id .. ">>>")
+    else
+      return {}
+    end
   else
     return nil
   end

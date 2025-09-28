@@ -14,10 +14,6 @@ na_rm <- function(x) {
   x[!is.na(x)]
 }
 
-readfile <- function(x) {
-  readChar(x, file.info(x)$size)
-}
-
 file_with_meta_ext <- function(file, meta_ext, ext = tools::file_ext(file)) {
   paste(tools::file_path_sans_ext(file),
     ".", meta_ext, ".", ext,
@@ -89,7 +85,7 @@ pandoc_ast <- function(file, from = NULL, tolist = TRUE) {
   if (tolist) {
     return(jsonlite::fromJSON(tmp, simplifyVector = FALSE))
   } else {
-    return(readfile(tmp))
+    return(brio::read_file(tmp))
   }
 }
 

@@ -11,7 +11,7 @@ md_to_openxml <- function(text, simplify = TRUE,
                           remove_bookmarks = simplify,
                           remove_secs = simplify) {
   tmpf <- tempfile(fileext = ".md")
-  cat(text, file = tmpf)
+  brio::write_lines(text, path = tmpf)
   tmpw <- tempfile(fileext = ".docx")
   pandoc_convert(tmpf, to = "docx", from = "markdown", output = tmpw)
   oml <- (
@@ -33,6 +33,7 @@ md_to_openxml <- function(text, simplify = TRUE,
   out
 }
 
-print.xmltext <- function(x) {
+#' @exportS3Method
+print.xmltext <- function(x, ...) {
   cat(x)
 }

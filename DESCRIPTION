@@ -13,7 +13,7 @@ LazyData: true
 ByteCompile: true
 URL: https://github.com/noamross/redoc
 BugReports: https://github.com/noamross/redoc/issues
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Imports: 
     rmarkdown (>= 1.12),
     knitr,
@@ -25,7 +25,8 @@ Imports:
     whoami,
     yaml,
     jsonlite,
-    sessioninfo
+    sessioninfo,
+    brio
 Suggests:
     spelling,
     testthat (>= 3.0.0),
