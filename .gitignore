@@ -10,3 +10,6 @@ docs
 TODO.md
 tests/testthat/artifacts
 testing
+xx.*
+xx/*
+README.html

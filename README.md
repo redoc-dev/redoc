@@ -5,25 +5,31 @@
 
 <!-- badges: start -->
 
-[![License:
-MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Project Status: Suspended – Initial development has started, but there has not yet been a stable, usable release; work has been stopped for the time being but the author(s) intend on resuming work.](https://www.repostatus.org/badges/latest/suspended.svg)](https://www.repostatus.org/#suspended)
+[<img src="https://img.shields.io/badge/License-MIT-blue.svg"
+data-external="1" alt="License: MIT" />](https://opensource.org/licenses/MIT)
+[<img src="http://www.repostatus.org/badges/latest/wip.svg"
+data-external="1"
+alt="Project Status: WIP - Initial development is in progress, but there has not yet been a stable, usable release suitable for the public." />](http://www.repostatus.org/#wip)
 [![Build
 Status](https://travis-ci.org/noamross/redoc.svg?branch=master)](https://travis-ci.org/noamross/redoc)
-[![AppVeyor build
-status](https://ci.appveyor.com/api/projects/status/github/noamross/redoc?branch=master&svg=true)](https://ci.appveyor.com/project/noamross/redoc)
-[![codecov](https://codecov.io/gh/noamross/redoc/branch/master/graph/badge.svg)](https://codecov.io/gh/noamross/redoc)
+[![R-CMD-check](https://github.com/redoc-dev/redoc/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/redoc-dev/redoc/actions/workflows/R-CMD-check.yaml)
+[<img
+src="https://codecov.io/gh/noamross/redoc/branch/master/graph/badge.svg"
+data-external="1" alt="codecov" />](https://codecov.io/gh/noamross/redoc)
 <!-- badges: end -->
+
+***As of Q4 2025, {redoc} has been un-archived and is is an active, but
+alpha-stage project again.***
 
 **redoc** is a package to enable a two-way R Markdown-Microsoft Word
 workflow. It generates Word documents that can be de-rendered back into
 R Markdown, retaining edits on the Word document, including tracked
 changes.
 
-**redoc** is not yet stable (and currently in suspended mode); its core engine and API are still subject
-to change. It’s been overhauled a few times already\! I welcome your
+**redoc** is not yet stable; its core engine and API are still subject
+to change. It’s been overhauled a few times already! I welcome your
 [contributions and
-feedback](https://noamross.github.io/redoc/CONTRIBUTING.html) (though it'll take a bit to get to them).
+feedback](https://noamross.github.io/redoc/CONTRIBUTING.html).
 
 ## Installation
 
@@ -56,12 +62,12 @@ output:
 `redoc()` output resembles typical R Markdown Word output, but has some
 key differences:
 
-  - [Critic Markup](http://criticmarkup.com/spec.php#thebasicsyntax)
-    edits will be converted to Word tracked changes.
-  - By default, parts of the documented generated programmatically will
-    be highlighted. (Change this with `highlight_outputs = FALSE`)
-  - The original `.Rmd` and all code is stored internally in Word
-    document for later retrieval.
+- [Critic Markup](http://criticmarkup.com/spec.php#thebasicsyntax) edits
+  will be converted to Word tracked changes.
+- By default, parts of the documented generated programmatically will be
+  highlighted. (Change this with `highlight_outputs = FALSE`)
+- The original `.Rmd` and all code is stored internally in Word document
+  for later retrieval.
 
 Word files that have been created by `redoc()` can be reverted to `.Rmd`
 with the `dedoc()` function, *even after they are edited*. `dedoc()`
@@ -96,27 +102,27 @@ and
 **redoc** has three RStudio Addins to simplify workflow when working
 with R Markdown documents:
 
-  - “Render and Update” renders an R Markdown Document and the updates
-    the text after round-tripping in to Word format and back. This helps
-    with cleaning up small syntax differences (e.g. white space, line
-    wrapping).
-  - “Dedoc to active file” and “Dedoc to new file” de-render a file and
-    place the contents in RStudio editor tabs, and also display a the
-    changes from `redoc_diff()` in the RStudio viewer.
+- “Render and Update” renders an R Markdown Document and the updates the
+  text after round-tripping in to Word format and back. This helps with
+  cleaning up small syntax differences (e.g. white space, line
+  wrapping).
+- “Dedoc to active file” and “Dedoc to new file” de-render a file and
+  place the contents in RStudio editor tabs, and also display a the
+  changes from `redoc_diff()` in the RStudio viewer.
 
 The package also contains a `dedoc` R Markdown template.
 
 ## Related Work
 
-  - [**officedown**](https://github.com/davidgohel/officedown) produces
-    rich MS Word documents from R Markdown. We hope for more integration
-    between these packages in the future.
-  - [**diffobj**](https://github.com/brodieG/diffobj) visualizes
-    differences between R objects and drives **redoc**’s diff view.
+- [**officedown**](https://github.com/davidgohel/officedown) produces
+  rich MS Word documents from R Markdown. We hope for more integration
+  between these packages in the future.
+- [**diffobj**](https://github.com/brodieG/diffobj) visualizes
+  differences between R objects and drives **redoc**’s diff view.
 
 ## Contributing
 
-Want have feedback or want to contribute? Great\! Please take a look at
+Want have feedback or want to contribute? Great! Please take a look at
 the [contributing
 guidelines](https://github.com/noamross/redoc/blob/master/.github/CONTRIBUTING.md)
 before filing an issue or pull request.

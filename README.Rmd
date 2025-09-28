@@ -20,10 +20,11 @@ options(width = 120)
 [![Project Status: WIP - Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/latest/wip.svg){data-external="1"}](http://www.repostatus.org/#wip)
 [![Build
 Status](https://travis-ci.org/noamross/redoc.svg?branch=master)](https://travis-ci.org/noamross/redoc)
-[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/noamross/redoc?branch=master&svg=true){data-external="1"}](https://ci.appveyor.com/project/noamross/redoc)
+[![R-CMD-check](https://github.com/redoc-dev/redoc/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/redoc-dev/redoc/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/gh/noamross/redoc/branch/master/graph/badge.svg){data-external="1"}](https://codecov.io/gh/noamross/redoc)
-[![CRAN status](https://www.r-pkg.org/badges/version/redoc){data-external="1"}](https://cran.r-project.org/package=redoc)
 <!-- badges: end -->
+
+***As of Q4 2025, {redoc} has been un-archived and is is an active, but alpha-stage project again.***
 
 **redoc** is a package to enable a two-way R Markdown-Microsoft
 Word workflow.  It generates Word documents that can be de-rendered back into

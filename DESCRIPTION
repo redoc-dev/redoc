@@ -4,7 +4,7 @@ Title: Reversible Reproducible Documents
 Description: Implements a reversible 'R Markdown' to 'Microsoft Word' pipeline.
 Authors@R: person(given = "Noam",
                   family = "Ross",
-                  email = 'noam.ross+redoc@gmail.com',
+                  email = 'redoc@noamross.net',
                   role = c('aut', 'cre'),
                   comment = c(ORCID='0000-0002-2136-0000'))
 License: MIT + file LICENSE
@@ -27,15 +27,14 @@ Imports:
     jsonlite,
     sessioninfo
 Suggests:
-    spelling, 
-    testthat,
+    spelling,
+    testthat (>= 3.0.0),
     roxygen2,
     covr,
     pkgdown,
     rstudioapi
-Remotes:
-    r-lib/pkgdown
 SystemRequirements: pandoc (>= 2.1.2) - http://pandoc.org
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 Language: en-US
+Config/testthat/edition: 3
