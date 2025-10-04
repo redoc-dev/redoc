@@ -13,6 +13,7 @@ testing
 xx.*
 xx/*
 README.html
+tests/testthat/test_rmds/*.docx
 
 ### MicrosoftOffice ###
 *.tmp

@@ -28,6 +28,7 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      REDOC_ARTIFACTS_DIR: "/tmp/redoc-artifacts"
 
     steps:
       - uses: actions/checkout@v4
@@ -49,3 +50,13 @@ jobs:
         with:
           upload-snapshots: true
           build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
+
+      - name: Upload roundtrip testing artifacts
+        uses: actions/upload-artifact@v4
+        if: success() || failure()
+        with:
+          name: ${{ format('redoc-test-docs-{0}-{1}-r{2}-{3}', runner.os, runner.arch, matrix.config.r, matrix.config.id || strategy.job-index ) }}
+          path: ${{ env.REDOC_ARTIFACTS_DIR }}
+          if-no-files-found: warn
+          retention-days: 90
+

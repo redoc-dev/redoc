@@ -33,7 +33,10 @@ Suggests:
     roxygen2,
     covr,
     pkgdown,
-    rstudioapi
+    rstudioapi,
+    gt
+Remotes:
+    rstudio/rmarkdown
 SystemRequirements: pandoc (>= 2.1.2) - http://pandoc.org
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)

@@ -1,0 +1,20 @@
+---
+title: My Title
+date: Created `r Sys.Date()`
+output: redoc::redoc
+---
+
+This document tests tables in the {gt} package.
+
+```{r setup}
+library(gt)
+```
+
+```{r}
+exibble
+```
+
+```{r}
+exibble |> gt(rowname_col = "row")
+```
+

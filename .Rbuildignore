@@ -23,6 +23,8 @@ tests/testthat/token_file.enc
 ^inst/endnote$
 ^tests/testthat/artifacts$
 ^testing$
-^~.+\.(docx|xlsx|pptx)$
+^.*~.+\.(docx|xlsx|pptx)$
 ^xx
 ^README\.html$
+^air\.toml$
+^\.luarc\.json$

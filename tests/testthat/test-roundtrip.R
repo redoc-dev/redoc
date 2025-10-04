@@ -1,71 +1,74 @@
-context("redoc round-trips")
-library(diffobj)
-# library(redoc)
 
-if (dir.exists("artifacts")) unlink("artifacts", recursive = TRUE)
-dir.create("artifacts")
-file.copy(redoc_example_rmd(),
-  file.path("artifacts", "testdoc.Rmd"),
-  overwrite = TRUE
+test_rmds <- c(
+  redoc_example_rmd(),
+  list.files(test_path("test_rmds"), "\\.Rmd$", full.names = TRUE)
 )
 
-test_that("Knitting is successful", {
-  rmarkdown::render(
-    input = file.path("artifacts", "testdoc.Rmd"),
-    output_format = redoc(),
-    output_dir = "artifacts",
-    intermediates_dir = "artifacts",
-    output_file = "testdoc.docx",
-    quiet = TRUE,
-    clean = FALSE,
-  )
-  expect_true(file.exists(file.path("artifacts", "testdoc.docx")))
-})
 
-test_that("All files are embedded and match", {
-  unzip(file.path("artifacts", "testdoc.docx"),
-    exdir = file.path("artifacts", "docx_unzipped")
-  )
-  to_embed <-
-    sort(list.files("artifacts", "(md|yml)$",
-      include.dirs = FALSE,
-      full.names = TRUE
-    ))
+
+
+for(rmd in test_rmds) {
+
+  rmdir <- test_roundtrip(rmd, artifacts_dir)
+
+  test_that(paste0("Rendering succeeds:", basename(rmd)), {
+    outdoc <- file.path(rmdir, paste0(basename(tools::file_path_sans_ext(rmd)), ".docx"))
+    expect_true(file.exists(outdoc))
+  })
+
+  test_that(paste0("All embedded files match:", basename(rmd)), {
+  to_embed <- sort(list.files(rmdir, "(md|yml)$", include.dirs = FALSE, full.names = TRUE))
   embedded <- sort(list.files(
-    file.path("artifacts", "docx_unzipped", "redoc"),
-    "(md|yml)$",
-    include.dirs = FALSE, full.names = TRUE
-  ))
-  expect_identical(basename(embedded), basename(to_embed))
-  for (i in seq_along(embedded)) {
-    expect_identical(
-      readLines(embedded[i], warn = FALSE),
-      readLines(to_embed[i], warn = FALSE)
-    )
+     file.path(rmdir, "docx_unzipped", "redoc"),
+     "(md|yml)$",
+     include.dirs = FALSE, full.names = TRUE
+   ))
+   expect_identical(basename(embedded), basename(to_embed))
+   for (i in seq_along(embedded)) {
+     expect_identical(
+       readLines(embedded[i], warn = FALSE),
+       readLines(to_embed[i], warn = FALSE)
+     )
   }
 })
 
-test_that("R Markdown is preserved in the roundtrip", {
-  diffpath <- file.path("artifacts", "diffs")
-  if (!dir.exists(diffpath)) dir.create(diffpath)
-  orig <- file.path("artifacts", "testdoc.Rmd")
-  roundtrip <- file.path("artifacts", "testdoc.roundtrip.Rmd")
-  drmd <- diffobj::diffFile(orig, roundtrip,
-    mode = "sidebyside", context = "auto", format = "html",
-    tar.banner = "Original", cur.banner = "Current",
-    pager = list(file.path = tempfile(fileext = ".html"))
-  )
-  cat(as.character(drmd), file = file.path(diffpath, "roundtrip-rmd.html"))
-  expect_equal(readLines(orig), readLines(roundtrip))
+  test_that(paste0("R Markdown is preserved in the roundtrip:", basename(rmd)), {
+    roundtrip <- file.path(rmdir, paste0(basename(tools::file_path_sans_ext(rmd)), ".roundtrip.Rmd"))
+    lines_comparison <- waldo::compare(
+      readLines(rmd, warn = FALSE),
+      readLines(roundtrip, warn = FALSE),
+      max_diffs = 3
+    )
+    ast_comparison <- waldo::compare(
+      pandoc_ast(rmd),
+      pandoc_ast(roundtrip),
+      max_diffs = 3)
+  # Function to truncate output to first few lines
+  truncate_comparison <- function(comparison, max_lines = 10) {
+    if (length(comparison) == 0) return("")
 
-  orig_ast <- pandoc_ast(orig)
-  roundtrip_ast <- pandoc_ast(roundtrip)
-  dast <- diffObj(orig_ast, roundtrip_ast,
-    mode = "sidebyside", pager = "on", format = "html",
-    tar.banner = "Original", cur.banner = "Current"
-  )
-  cat(as.character(dast),
-    file = file.path("artifacts", "diffs", "roundtrip-ast.html")
-  )
-  expect_equal(orig_ast, roundtrip_ast)
-})
+    # Capture the output when printing the comparison
+    captured <- capture.output(cat(comparison, sep = "\n"))
+
+    # Take only the first few lines
+    if (length(captured) > max_lines) {
+      truncated <- c(head(captured, max_lines), paste("... [", length(captured) - max_lines, "more lines truncated]"))
+    } else {
+      truncated <- captured
+    }
+
+    paste(truncated, collapse = "\n")
+  }
+
+  expect(length(lines_comparison) == 0,
+         failure_message = truncate_comparison(lines_comparison, max_lines = 8))
+  expect(length(ast_comparison) == 0,
+         failure_message = truncate_comparison(ast_comparison, max_lines = 8))
+  })
+
+  }
+
+if (nzchar(Sys.getenv("REDOC_ARTIFACTS_DIR"))) {
+  dir.create(dirname(Sys.getenv("REDOC_ARTIFACTS_DIR")), recursive = TRUE, showWarnings = FALSE)
+  file.rename(artifacts_dir, Sys.getenv("REDOC_ARTIFACTS_DIR"))
+}
