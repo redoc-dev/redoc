@@ -18,7 +18,7 @@ src="https://codecov.io/gh/noamross/redoc/branch/master/graph/badge.svg"
 data-external="1" alt="codecov" />](https://codecov.io/gh/noamross/redoc)
 <!-- badges: end -->
 
-***As of Q4 2025, {redoc} has been un-archived and is is an active, but
+***As of Q4 2025, {redoc} has been un-archived and is an active, but
 alpha-stage project again.***
 
 **redoc** is a package to enable a two-way R Markdown-Microsoft Word
